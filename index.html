@@ -5,161 +5,662 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de iPhones</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
 
-        select {
-            width: 200px;
-            padding: 10px;
-            margin-right: 20px;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="phone-overlay-area"
-        style="width: 280px; height: 560px; background-repeat: no-repeat; position: relative;">
-        <img id='modelofdevice' class='modelofdevice' src="iphone\iphone11\device.png"
-            style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
-        <img id="modelofbackground" class='modelofimage' src="iphone\iphone11\founder.png"
-            style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; cursor: pointer;" />
+    <div style="background-color: white; height: 100%; width: 100%; z-index: 4">
+        <div class="phone-overlay-area"
+            style="background-repeat: no-repeat; position: relative; margin: 1%; width: 900px; height: 620px; border: 2px solid; z-index: 5; margin: 0px; ">
 
-        <img id="modelofimage" class='modelofimage' src="iphone\iphone11\founder.png"
-            style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; cursor: pointer;" />
+            <div style='position: absolute;'>
+                <div>
+                    <button id='zoom'>ZOOM &#128269; ‎ </button>
+                </div>
+                <div id='reduce' style='font-size: 0.835em;'>
+                    <button>REDUZIR &#128269; ‎ </button>
+                </div>
+
+                <div>
+                    <button onclick='rotate(`90back`)'
+                        style='padding-right: 1px;padding-left: 10px; margin-left: 5px;'>90 <span
+                            style='font-size: 40px;'>&#8634;</span></button>
+                    <button onclick='rotate(`90front`)'
+                        style='padding-right: 1px;padding-left: 10px; margin-left: 1px;'>90 <span
+                            style='font-size: 40px;'>&#8635;</span></button>
+                </div>
+                <div>
+                    <button id='espelharhorizontal'
+                        style='height: 60px; width: 180px; font-size: 23px;padding-right: 1px;padding-left: 10px; margin-left: 1px;'>ESPELHAR
+                        HORIZONTAL</button>
+                </div>
+                <div>
+                    <button id='espelharvertical'
+                        style='height: 60px; width: 180px; font-size: 23px;padding-right: 1px;padding-left: 10px; margin-left: 1px;'>ESPELHAR
+                        VERTICAL</button>
+                </div>
+
+            </div>
+
+            <div id="joystick" style="width:15%;  z-index: 6; position: absolute; margin-left: 80%; margin-top: 50%">
+                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:rgb(16,16,16);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:rgb(240,240,240);stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:rgb(240,240,240);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:rgb(16,16,16);stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:rgb(168,168,168);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:rgb(239,239,239);stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="50" fill="url(#grad1)" />
+                    <circle cx="50" cy="50" r="47" fill="url(#grad2)" stroke="black" stroke-width="1.5px" />
+                    <circle cx="50" cy="50" r="44" fill="url(#grad3)" />
+                    <circle cx="50" cy="50" r="20" fill="#cccccc" stroke="black" stroke-width="1px" />
+                    <path d="M50,5 70,25 30,25Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoUp()"
+                        onmousedown="iniciarMovimentoUp()" onmouseup="pararMovimentoUp()" />
+                    <path d="M50,94 70,75 30,75Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoDown()"
+                        onmousedown="iniciarMovimentoDown()" onmouseup="pararMovimentoDown()" />
+                    <path d="M8,50 25,70 25,30Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoLeft()"
+                        onmousedown="iniciarMovimentoLeft()" onmouseup="pararMovimentoLeft()" />
+                    <path d="M95,50 75,70 75,30Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoRight()"
+                        onmousedown="iniciarMovimentoRight()" onmouseup="pararMovimentoRight()" />
+                </svg>
+
+
+
+            </div>
+
+            <div class="inter-phone"
+                style="background-repeat: no-repeat; position: relative; width: 70%; height: 70%; margin-left: 10.5%; margin-top: 9%; z-index: 4; ">
+                <img id='modelofdevice' class='modelofdevice' src="iphone\iphone11\device.png"
+                    style="z-index: 3;width: 34%; height: 100%; object-fit: cover; position: absolute;margin-top: -13%;margin-left: -15%; border-top: 82px solid white; border-bottom: 1000px solid white; border-left:316px solid white; border-right: 1000px solid white; opacity: 1; user-select: none;pointer-events: none; opacity: 1" />
+                <div id='imagethatuser' class="imagethatuser">
+
+                </div>
+            </div>
+
+
+            <div style='position: relative; z-index: 6; width: 200px;'>
+                <form action="/processar-imagem" method="post" enctype="multipart/form-data" id="formulario">
+                    <label for="imagem">Escolher Modelo</label>
+                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="mostrarImagem()">
+                </form>
+
+                <select id="opcoes">
+                    <option value="iphone11">iPhone 11</option>
+                    <option value="iphone11pro">iPhone 11 Pro</option>
+                    <option value="iphone11promax">iPhone 11 Pro Max</option>
+                    <option value="iphone12">iPhone 12</option>
+                    <option value="iphone12mini">iPhone 12 Mini</option>
+                    <option value="iphone12pro">iPhone 12 Pro</option>
+                    <option value="iphone12promax">iPhone 12 Pro Max</option>
+                    <option value="iphone13">iPhone 13</option>
+                    <option value="iphone13pro">iPhone 13 Pro</option>
+                    <option value="iphone13promax">iPhone 13 Pro Max</option>
+                    <option value="iphone14">iPhone 14</option>
+                    <option value="iphone14plus">iPhone 14 Plus</option>
+                    <option value="iphone14pro">iPhone 14 Pro</option>
+                    <option value="iphone14promax">iPhone 14 Pro Max</option>
+                    <option value="iphone15">iPhone 15</option>
+                    <option value="iphone15plus">iPhone 15 Plus</option>
+                    <option value="iphone15promax">iPhone 15 Pro Max</option>
+                    <option value="iphone4">iPhone 4</option>
+                    <option value="iphone5">iPhone 5</option>
+                    <option value="iphone6">iPhone 6</option>
+                    <option value="iphone6antiimpacto">iPhone 6 Anti-impacto</option>
+                    <option value="iphone6plus">iPhone 6 Plus</option>
+                    <option value="iphone6plusantiimpacto">iPhone 6 Plus Anti-impacto</option>
+                    <option value="iphone7plusantiimpacto">iPhone 7 Plus Anti-impacto</option>
+                    <option value="iphone78antiimpacto">iPhone 7/8 Anti-impacto</option>
+                    <option value="iphone8plus">iPhone 8 Plus</option>
+                    <option value="iphonese">iPhone SE</option>
+                    <option value="iphonese22">iPhone SE (2022)</option>
+                    <option value="iphonex">iPhone X</option>
+                    <option value="iphonexr">iPhone XR</option>
+                    <option value="iphonexs">iPhone XS</option>
+                    <option value="iphonexsmax">iPhone XS Max</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
     </div>
 
-    <script>
-var imagemAlvo = document.getElementById('modelofdevice');
-var isDragging = false;
-var startX, startY;
-
-document.addEventListener('mousedown', function (event) {
-    // Inicia o arrastar quando o botão do mouse é pressionado
-    if (event.target === imagemAlvo) {
-        isDragging = true;
-        startX = event.clientX;
-        startY = event.clientY;
-    }
-});
-
-document.addEventListener('mousemove', function (event) {
-    if (isDragging) {
-        // Calcula a diferença entre as posições inicial e atual do mouse
-        var deltaX = event.clientX - startX;
-        var deltaY = event.clientY - startY;
-        var imagemodelo = document.getElementById('modelofimage');
-
-        // Move a imagem com base no movimento do mouse
-        imagemodelo.style.top = (imagemodelo.offsetTop + deltaY) + 'px';
-        imagemodelo.style.left = (imagemodelo.offsetLeft + deltaX) + 'px';
-
-        startX = event.clientX;
-        startY = event.clientY;
-    }
-});
-
-document.addEventListener('mouseup', function () {
-    // Interrompe o arrastar quando o botão do mouse é liberado
-    isDragging = false;
-});
-
-
-    </script>
-
-
-
-    <form action="/processar-imagem" method="post" enctype="multipart/form-data" id="formulario">
-        <label for="imagem">Escolher Modelo</label>
-        <input type="file" id="imagem" name="imagem" accept="image/*" onchange="mostrarImagem()">
-    </form>
-
-    <select id="opcoes">
-        <option value="iphone11">iPhone 11</option>
-        <option value="iphone11pro">iPhone 11 Pro</option>
-        <option value="iphone11promax">iPhone 11 Pro Max</option>
-        <option value="iphone12">iPhone 12</option>
-        <option value="iphone12mini">iPhone 12 Mini</option>
-        <option value="iphone12pro">iPhone 12 Pro</option>
-        <option value="iphone12promax">iPhone 12 Pro Max</option>
-        <option value="iphone13">iPhone 13</option>
-        <option value="iphone13pro">iPhone 13 Pro</option>
-        <option value="iphone13promax">iPhone 13 Pro Max</option>
-        <option value="iphone14">iPhone 14</option>
-        <option value="iphone14plus">iPhone 14 Plus</option>
-        <option value="iphone14pro">iPhone 14 Pro</option>
-        <option value="iphone14promax">iPhone 14 Pro Max</option>
-        <option value="iphone15">iPhone 15</option>
-        <option value="iphone15plus">iPhone 15 Plus</option>
-        <option value="iphone15promax">iPhone 15 Pro Max</option>
-        <option value="iphone4">iPhone 4</option>
-        <option value="iphone5">iPhone 5</option>
-        <option value="iphone6">iPhone 6</option>
-        <option value="iphone6antiimpacto">iPhone 6 Anti-impacto</option>
-        <option value="iphone6plus">iPhone 6 Plus</option>
-        <option value="iphone6plusantiimpacto">iPhone 6 Plus Anti-impacto</option>
-        <option value="iphone7plusantiimpacto">iPhone 7 Plus Anti-impacto</option>
-        <option value="iphone78antiimpacto">iPhone 7/8 Anti-impacto</option>
-        <option value="iphone8plus">iPhone 8 Plus</option>
-        <option value="iphonese">iPhone SE</option>
-        <option value="iphonese22">iPhone SE (2022)</option>
-        <option value="iphonex">iPhone X</option>
-        <option value="iphonexr">iPhone XR</option>
-        <option value="iphonexs">iPhone XS</option>
-        <option value="iphonexsmax">iPhone XS Max</option>
-    </select>
-
 
 
     <script>
+
+
+
+
+
+
+
+
+
+        function maxposition() {
+            return true
+        }
+
+        var minhaVariavelGlobal = [];
+
+        function handleMouseUp(event) {
+            var modelofimage = document.getElementById('modelofimage');
+            var draggable = document.getElementById('draggable');
+            setTimeout(function () {
+                draggable.style.left = modelofimage.style.left;
+                draggable.style.top = modelofimage.style.top;
+
+                draggable.style.display = 'block';
+                modelofimage.style.display = 'none';
+                minhaVariavelGlobal[0] = draggable.style.left
+                minhaVariavelGlobal[1] = draggable.style.top
+                minhaVariavelGlobal[2] = true
+            }, 100);
+
+        }
+
+
+        document.getElementById("joystick").addEventListener("mouseup", handleMouseUp);
+
+        function createDraggable(elemento) {
+            let posX = 0;
+            let posY = 0;
+            let top = 0;
+            let left = 0;
+            let isDragging = false;
+
+            function onMouseDown(event) {
+                ajustarOpacidade(0.8);
+                posX = event.x;
+                posY = event.y;
+                elemento.classList.add("dragging");
+                window.addEventListener("mousemove", onMouseMove);
+                window.addEventListener("mouseup", onMouseUp);
+            }
+
+            function onMouseMove(event) {
+                ajustarOpacidade(0.8);
+                const diffX = event.x - posX;
+                const diffY = event.y - posY;
+
+                if (minhaVariavelGlobal[2]) {
+                    top = parseFloat(minhaVariavelGlobal[1]);
+                    left = parseFloat(minhaVariavelGlobal[0]);
+                } else {
+                    elemento.style.top = `${top + diffY}px`;
+                    elemento.style.left = `${left + diffX}px`;
+                }
+
+                minhaVariavelGlobal[2] = false;
+            }
+
+            function onMouseUp(event) {
+                ajustarOpacidade(1);
+                top = parseInt(elemento.style.top) || 0;
+                left = parseInt(elemento.style.left) || 0;
+
+                elemento.classList.remove("dragging");
+                window.removeEventListener("mousemove", onMouseMove);
+                window.removeEventListener("mouseup", onMouseUp);
+            }
+            elemento.addEventListener("mousedown", onMouseDown);
+
+            return {
+                destroy: function () {
+                    elemento.removeEventListener("mousedown", onMouseDown);
+                }
+            };
+        }
+
+        // Obtém a referência da div existente
+        function createAElement() {
+
+            var divExistente = document.getElementById('imagethatuser');
+            if (document.getElementById('draggable')) {
+                divExistente.removeChild(document.getElementById('draggable'));
+                divExistente.removeChild(document.getElementById('modelofimage'));
+            }
+            var imgDraggable = document.createElement("img");
+            imgDraggable.className = "draggable";
+            imgDraggable.id = "draggable";
+            imgDraggable.style = "width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; transition: transform 0.3s linear, z-index 0.3s linear; z-index: 0;";
+            divExistente.appendChild(imgDraggable);
+
+            // Criação da segunda imagem
+            var imgModelOfImage = document.createElement("img");
+            imgModelOfImage.id = "modelofimage";
+            imgModelOfImage.className = "modelofimage";
+            imgModelOfImage.style = "z-index: 2; object-fit: cover; position: absolute; width: 50%; top: 0; left: 0%; transition: transform 0.3s linear, z-index 0.3s linear; z-index: 0;";
+            divExistente.appendChild(imgModelOfImage);
+
+            createDraggable(imgDraggable);
+        }
+
+        // createAElement()
+
+        document.querySelectorAll(".draggable").forEach(function (elemento) {
+            //     console.log(elemento)
+
+        });
+
+
+
+
+
+        var intervaloUp, intervaloDown, intervaloLeft, intervaloRight;
+
+        function iniciarMovimentoUp() {
+
+            intervaloUp = setInterval(MovimentoUp, 100);
+        }
+
+
+        function pararMovimentoUp() {
+            clearInterval(intervaloUp);
+            setTimeout(function () {
+                ajustarOpacidade(1);
+            }, 200);
+        }
+
+        function iniciarMovimentoDown() {
+            console.log('entrou')
+
+            intervaloDown = setInterval(MovimentoDown, 100);
+        }
+
+        function pararMovimentoDown() {
+            clearInterval(intervaloDown);
+            setTimeout(function () {
+                ajustarOpacidade(1);
+            }, 200);
+        }
+
+        function iniciarMovimentoLeft() {
+            intervaloLeft = setInterval(MovimentoLeft, 100);
+        }
+
+        function pararMovimentoLeft() {
+            clearInterval(intervaloLeft);
+            setTimeout(function () {
+                ajustarOpacidade(1);
+            }, 200);
+        }
+
+        function iniciarMovimentoRight() {
+            intervaloRight = setInterval(MovimentoRight, 100);
+        }
+
+        function pararMovimentoRight() {
+            clearInterval(intervaloRight);
+            setTimeout(function () {
+                ajustarOpacidade(1);
+            }, 200);
+        }
+
+        function ajustarOpacidade(opacidade) {
+            var modelofdevice = document.getElementById("modelofdevice");
+            modelofdevice.style.opacity = opacidade.toString();
+        }
+
+        function MovimentoUp() {
+
+            moverImagem(0, -1);
+            ajustarOpacidade(0.8);
+
+
+        }
+
+        function MovimentoDown() {
+            moverImagem(0, 1);
+            ajustarOpacidade(0.8);
+
+        }
+
+        function MovimentoLeft() {
+            console.log(document.getElementById('modelofimage').offsetLeft)
+               if (document.getElementById('modelofimage').offsetLeft > -95) {
+            moverImagem(-1, 0);
+            ajustarOpacidade(0.8);
+             }
+        }
+
+        function MovimentoRight() {
+            moverImagem(1, 0);
+            ajustarOpacidade(0.8);
+
+        }
+
+
+        function moverImagem(deltaX, deltaY) {
+
+            maxposition()
+
+            if (maxposition() == true) {
+
+                var imagem = document.getElementById("modelofimage");
+
+                if (imagem.style.display == 'none') {
+                    var joystick = false
+                }
+                if (joystick == false) {
+                    var draggable = document.getElementById('draggable');
+
+                    var posicaoX = draggable.offsetLeft;
+                    var posicaoY = draggable.offsetTop;
+
+                    imagem.style.display = 'block';
+                    imagem.style.top = posicaoY + 'px';
+                    imagem.style.left = draggable.style.left;
+                    imagem.style.width = draggable.width + 'px'
+                    imagem.style.height = draggable.height + 'px'
+                    draggable.style.display = 'none'
+
+                }
+
+
+                var posicaoAtualX = parseInt(imagem.style.left) || 0;
+                var posicaoAtualY = parseInt(imagem.style.top) || 0;
+
+                var novaPosicaoX = posicaoAtualX + deltaX;
+                var novaPosicaoY = posicaoAtualY + deltaY;
+
+                imagem.style.left = novaPosicaoX + "px";
+                imagem.style.top = novaPosicaoY + "px";
+
+                var joystick = true
+
+            }
+        }
+
+
+
 
         document.getElementById('opcoes').addEventListener('change', function () {
+
             const modelofimage = document.getElementById('modelofdevice');
             const selectedValue = this.value;
             modelofimage.innerHTML = '';
             const imagemUrl = `iphone/${selectedValue}/device.png`;
             modelofimage.src = imagemUrl;
             modelofimage.alt = `Imagem do iPhone ${selectedValue}`;
+
         });
 
 
         function mostrarImagem() {
-            var inputImagem = document.getElementById('imagem');
+
+            createAElement()
+
             var modelofimage = document.getElementById('modelofimage');
+            var inputImagem = document.getElementById('imagem');
+            var draggable = document.getElementById('draggable');
+
             if (inputImagem.files && inputImagem.files[0]) {
+
                 var reader = new FileReader();
                 reader.onload = function (e) {
+
                     modelofimage.src = e.target.result;
-                }
+
+
+
+                    modelofimage.onload = function () {
+
+                        var divHeight = document.querySelector('.inter-phone').offsetHeight;
+                        var alturaImagem = modelofimage.height;
+
+
+                        while (divHeight > alturaImagem) {
+                            const novaLargura = parseInt(modelofimage.style.width) + 1;
+                            modelofimage.style.width = novaLargura + '%';
+
+                            divHeight = document.querySelector('.inter-phone').offsetHeight;
+                            alturaImagem = modelofimage.clientHeight;  // Use clientHeight para obter a altura do elemento
+
+                        }
+
+                        while (divHeight < alturaImagem) {
+                            const novaLargura = parseInt(modelofimage.style.width) - 1;
+                            modelofimage.style.width = novaLargura + '%';
+
+                            divHeight = document.querySelector('.inter-phone').offsetHeight;
+                            alturaImagem = modelofimage.clientHeight;  // Use clientHeight para obter a altura do elemento
+                        }
+
+                        if (parseInt(modelofimage.style.width) < 60) {
+
+
+                            modelofimage.style.marginLeft = parseInt(modelofimage.style.width) / 2 + '%';
+
+                        }
+
+
+                        var draggable = document.getElementById('draggable');
+
+                        draggable.style.backgroundImage = 'url(' + e.target.result + ')';
+                        draggable.style.backgroundSize = `${100}% ${100}%`; // width e height
+                        draggable.style.backgroundRepeat = 'no-repeat';
+                        draggable.style.backgroundPosition = 'center';
+                        draggable.style.width = modelofimage.style.width;
+                        draggable.style.marginLeft = modelofimage.style.marginLeft
+                        modelofimage.style.display = 'none';
+
+                    };
+                };
+
+
                 reader.readAsDataURL(inputImagem.files[0]);
             }
+
+
         }
 
 
+        function zoom() {
+            ajustarOpacidade(0.8)
+            const draggableElement = document.getElementById('draggable');
+            const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
+            draggableElement.style.width = draggableElement.offsetWidth + 1 + 'px';
+            draggableElement.style.height = draggableElement.offsetHeight + 1 + 'px';
 
+        }
+
+        var button = document.querySelector("#zoom");
+        var zoomInterval;
+
+        button.addEventListener("mousedown", function (e) {
+            zoomInterval = setInterval(zoom, 100);
+        }, false);
+
+        button.addEventListener("mouseup", function (e) {
+            setTimeout(function () {
+                ajustarOpacidade(1)
+            }, 200);
+            clearInterval(zoomInterval);
+        }, false);
+
+        button.addEventListener("click", function (e) {
+            zoom()
+        }, false);
+
+
+        function reduce() {
+            ajustarOpacidade(0.8)
+            const draggableElement = document.getElementById('draggable');
+            const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
+            draggableElement.style.width = draggableElement.offsetWidth - 1 + 'px';
+            draggableElement.style.height = draggableElement.offsetHeight - 1 + 'px';
+        }
+
+        var button = document.querySelector("#reduce");
+        var reduceInterval;
+
+        button.addEventListener("mousedown", function (e) {
+            reduceInterval = setInterval(reduce, 100);
+        }, false);
+
+        button.addEventListener("mouseup", function (e) {
+            setTimeout(function () {
+                ajustarOpacidade(1)
+            }, 200);
+            clearInterval(reduceInterval);
+        }, false);
+
+        button.addEventListener("click", function (e) {
+            reduce()
+        }, false);
+
+
+
+        function rotate(degrees) {
+
+            ajustarOpacidade(0.8)
+
+            if (degrees == '90back') {
+                degrees = -90
+            }
+            if (degrees == '90front') {
+                degrees = 90
+            }
+
+
+            const imagem = document.getElementById('draggable');
+            const modelofimage = document.getElementById('modelofimage');
+
+            const transformValue = imagem.style.transform || getComputedStyle(imagem).transform;
+
+            const regex = /rotate\(([-+]?\d*\.?\d+)\w*\)/;
+            const match = transformValue.match(regex);
+            const anguloAtual = match ? parseFloat(match[1]) : 0;
+            const novoAngulo = anguloAtual + degrees;
+            imagem.style.transform = `rotate(${novoAngulo}deg)`;
+            modelofimage.style.transform = `rotate(${novoAngulo}deg)`;
+
+            setTimeout(function () {
+                ajustarOpacidade(1)
+            }, 500);
+
+
+        }
+
+
+        var botaoEspelhar = document.getElementById('espelharhorizontal');
+        botaoEspelhar.addEventListener('click', function () {
+            ajustarOpacidade(0.8)
+            if (document.getElementById('draggable').style.transform == 'scaleX(-1)') {
+                document.getElementById('draggable').style.transform = 'scaleX(1)';
+                document.getElementById('modelofimage').style.transform = 'scaleX(1)';
+
+            } else {
+                document.getElementById('draggable').style.transform = 'scaleX(-1)';
+                document.getElementById('modelofimage').style.transform = 'scaleX(-1)';
+
+            }
+            setTimeout(function () {
+                ajustarOpacidade(1)
+            }, 500);
+        });
+
+        botaoEspelhar = document.getElementById('espelharvertical');
+        botaoEspelhar.addEventListener('click', function () {
+            ajustarOpacidade(0.8)
+            if (document.getElementById('draggable').style.transform == 'scaleY(-1)') {
+                document.getElementById('draggable').style.transform = 'scaleY(1)';
+                document.getElementById('modelofimage').style.transform = 'scaleY(1)';
+
+            } else {
+                document.getElementById('draggable').style.transform = 'scaleY(-1)';
+                document.getElementById('modelofimage').style.transform = 'scaleY(-1)';
+            }
+            setTimeout(function () {
+                ajustarOpacidade(1)
+            }, 500);
+        });
     </script>
+
+
 </body>
 <style>
-    .phone-overlay-area {
-        z-index: 0;
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
     }
 
-    .modelofdevice {
-        z-index: 3;
+    select {
+        width: 200px;
+        padding: 10px;
+        margin-right: 20px;
     }
 
-    .modelofbackground {
-        z-index: 5;
+    .background-device {
+        z-index: 6;
     }
 
-    .modelofimage {
-        z-index: 1;
+
+    .dragging {
+        transform: scale(1.01);
+        z-index: 999;
+    }
+
+    button {
+        margin: 1%;
+        z-index: 7;
+        background: #1AAB8A;
+        color: #fff;
+        border-radius: 5px;
+        position: relative;
+        height: 45px;
+        font-size: 1.6em;
+        padding: 0 1em;
+        cursor: pointer;
+        transition: 800ms ease all;
+        outline: none;
+
+
+    }
+
+    button:hover {
+        background: #fff;
+        color: #1AAB8A;
+        font-size: 1.7em;
+    }
+
+    button:before,
+    button:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 2px;
+        width: 0;
+        background: #1AAB8A;
+        transition: 400ms ease all;
+    }
+
+    button:after {
+        right: inherit;
+        top: inherit;
+        left: 0;
+        bottom: 0;
+    }
+
+    button:hover:before,
+    button:hover:after {
+        width: 100%;
+        transition: 800ms ease all;
     }
 </style>
 
