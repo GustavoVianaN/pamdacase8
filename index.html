@@ -140,12 +140,6 @@
 
 
 
-
-
-
-
-
-
         function maxposition() {
             return true
         }
@@ -168,9 +162,9 @@
 
         }
 
-
+        lastpositionX = ''
         document.getElementById("joystick").addEventListener("mouseup", handleMouseUp);
-
+        
         function createDraggable(elemento) {
             let posX = 0;
             let posY = 0;
@@ -189,15 +183,26 @@
 
             function onMouseMove(event) {
                 ajustarOpacidade(0.8);
-                const diffX = event.x - posX;
-                const diffY = event.y - posY;
+                var diffX = event.x - posX;
+                var diffY = event.y - posY;
 
+
+            /*   console.log(document.getElementById('draggable').offsetWidth - document.getElementById('draggable').offsetLeft)
+                if(document.getElementById('draggable').offsetLeft > 230){
+                    var diffX = 0
+                    left =  0
+                    window.addEventListener("mouseup", onMouseUp);
+                    onMouseDown(event)
+                } 
+                */
                 if (minhaVariavelGlobal[2]) {
                     top = parseFloat(minhaVariavelGlobal[1]);
                     left = parseFloat(minhaVariavelGlobal[0]);
                 } else {
+                    
                     elemento.style.top = `${top + diffY}px`;
                     elemento.style.left = `${left + diffX}px`;
+
                 }
 
                 minhaVariavelGlobal[2] = false;
@@ -245,13 +250,6 @@
             createDraggable(imgDraggable);
         }
 
-        // createAElement()
-
-        document.querySelectorAll(".draggable").forEach(function (elemento) {
-            //     console.log(elemento)
-
-        });
-
 
 
 
@@ -268,11 +266,10 @@
             clearInterval(intervaloUp);
             setTimeout(function () {
                 ajustarOpacidade(1);
-            }, 200);
+            }, 1000);
         }
 
         function iniciarMovimentoDown() {
-            console.log('entrou')
 
             intervaloDown = setInterval(MovimentoDown, 100);
         }
@@ -281,7 +278,7 @@
             clearInterval(intervaloDown);
             setTimeout(function () {
                 ajustarOpacidade(1);
-            }, 200);
+            }, 1000);
         }
 
         function iniciarMovimentoLeft() {
@@ -292,7 +289,7 @@
             clearInterval(intervaloLeft);
             setTimeout(function () {
                 ajustarOpacidade(1);
-            }, 200);
+            }, 1000);
         }
 
         function iniciarMovimentoRight() {
@@ -303,7 +300,7 @@
             clearInterval(intervaloRight);
             setTimeout(function () {
                 ajustarOpacidade(1);
-            }, 200);
+            }, 1000);
         }
 
         function ajustarOpacidade(opacidade) {
@@ -312,77 +309,115 @@
         }
 
         function MovimentoUp() {
+            var largura = document.getElementById('modelofimage').style.height
+            var offsetTop = document.getElementById('modelofimage').offsetTop;
+            if (offsetTop == 0) {
+                offsetTop = document.getElementById('draggable').offsetTop
+            }
 
-            moverImagem(0, -1);
-            ajustarOpacidade(0.8);
-
-
+            var larguraString = document.getElementById('modelofimage').style.height;
+            if (larguraString.includes('%')) {
+                moverImagem(0, -10);
+                ajustarOpacidade(0.8);
+            } else {
+                moverImagem(0, -10);
+                ajustarOpacidade(0.8);
+                larguraString = parseInt(larguraString);
+                if (larguraString + offsetTop < 430) {
+                    moverImagem(0, 10);
+                    ajustarOpacidade(0.8);
+                }
+            }
         }
 
         function MovimentoDown() {
-            moverImagem(0, 1);
-            ajustarOpacidade(0.8);
+            if (document.getElementById('modelofimage').offsetTop < 10 && document.getElementById('draggable').offsetTop < 10) {
 
+                moverImagem(0, 10);
+                ajustarOpacidade(0.8);
+            }
         }
 
         function MovimentoLeft() {
-            console.log(document.getElementById('modelofimage').offsetLeft)
-               if (document.getElementById('modelofimage').offsetLeft > -95) {
-            moverImagem(-1, 0);
-            ajustarOpacidade(0.8);
-             }
+            var largura = document.getElementById('modelofimage').style.width
+            var offsetLeft = document.getElementById('modelofimage').offsetLeft;
+            if (offsetLeft == 0) {
+                offsetLeft = document.getElementById('draggable').offsetLeft
+            }
+
+
+            var larguraString = document.getElementById('modelofimage').style.width;
+
+            if (larguraString.includes('%')) {
+                moverImagem(-10, 0);
+                ajustarOpacidade(0.8);
+            } else {
+                larguraString = parseInt(larguraString);
+                if (larguraString + offsetLeft > 430) {
+                    moverImagem(-10, 0);
+                    ajustarOpacidade(0.8);
+                }
+            }
+
         }
 
         function MovimentoRight() {
-            moverImagem(1, 0);
-            ajustarOpacidade(0.8);
-
+            if (document.getElementById('modelofimage').offsetLeft < 229 && document.getElementById('draggable').offsetLeft < 229) {
+                moverImagem(10, 0);
+                ajustarOpacidade(0.8);
+            }
         }
 
 
         function moverImagem(deltaX, deltaY) {
 
-            maxposition()
-
-            if (maxposition() == true) {
-
-                var imagem = document.getElementById("modelofimage");
-
-                if (imagem.style.display == 'none') {
-                    var joystick = false
-                }
-                if (joystick == false) {
-                    var draggable = document.getElementById('draggable');
-
-                    var posicaoX = draggable.offsetLeft;
-                    var posicaoY = draggable.offsetTop;
-
-                    imagem.style.display = 'block';
-                    imagem.style.top = posicaoY + 'px';
-                    imagem.style.left = draggable.style.left;
-                    imagem.style.width = draggable.width + 'px'
-                    imagem.style.height = draggable.height + 'px'
-                    draggable.style.display = 'none'
-
-                }
 
 
-                var posicaoAtualX = parseInt(imagem.style.left) || 0;
-                var posicaoAtualY = parseInt(imagem.style.top) || 0;
+            var imagem = document.getElementById("modelofimage");
 
-                var novaPosicaoX = posicaoAtualX + deltaX;
-                var novaPosicaoY = posicaoAtualY + deltaY;
+            if (imagem.style.display == 'none') {
+                var joystick = false
+            }
+            if (joystick == false) {
+                var draggable = document.getElementById('draggable');
 
-                imagem.style.left = novaPosicaoX + "px";
-                imagem.style.top = novaPosicaoY + "px";
+                var posicaoX = draggable.offsetLeft;
+                var posicaoY = draggable.offsetTop;
 
-                var joystick = true
+                imagem.style.display = 'block';
+                imagem.style.top = posicaoY + 'px';
+                imagem.style.left = draggable.style.left;
+                imagem.style.width = draggable.width + 'px'
+                imagem.style.height = draggable.height + 'px'
+                draggable.style.display = 'none'
 
             }
+
+
+            var posicaoAtualX = parseInt(imagem.style.left) || 0;
+            var posicaoAtualY = parseInt(imagem.style.top) || 0;
+
+            var novaPosicaoX = posicaoAtualX + deltaX;
+            var novaPosicaoY = posicaoAtualY + deltaY;
+
+            imagem.style.left = novaPosicaoX + "px";
+            imagem.style.top = novaPosicaoY + "px";
+
+            var joystick = true
+
+
         }
 
 
-
+        function selectcasefordevice(selectedValue) {
+            createAElement()
+            const modelofimagedevice = document.getElementById('modelofimage');
+            modelofimagedevice.src = `iphone/${selectedValue}/founder.png`
+            modelofimagedevice.style.left = '34.8%'; // Define a propriedade left como 50%
+            modelofimagedevice.style.width = '35%'; // Define a propriedade left como 50%
+            modelofimagedevice.style.top = '-1px';
+        }
+        selectcasefordevice('iphone11')
 
         document.getElementById('opcoes').addEventListener('change', function () {
 
@@ -393,7 +428,10 @@
             modelofimage.src = imagemUrl;
             modelofimage.alt = `Imagem do iPhone ${selectedValue}`;
 
+            selectcasefordevice(selectedValue)
         });
+
+
 
 
         function mostrarImagem() {
@@ -437,10 +475,10 @@
                         }
 
                         if (parseInt(modelofimage.style.width) < 60) {
-
-
                             modelofimage.style.marginLeft = parseInt(modelofimage.style.width) / 2 + '%';
-
+                            if (parseInt(modelofimage.style.width) < 40 && parseInt(modelofimage.style.width) > 30) {
+                                modelofimage.style.marginLeft = 36 + '%';
+                            }
                         }
 
 
@@ -465,12 +503,17 @@
         }
 
 
-        function zoom() {
+        function zoom(size) {
             ajustarOpacidade(0.8)
+
             const draggableElement = document.getElementById('draggable');
             const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
-            draggableElement.style.width = draggableElement.offsetWidth + 1 + 'px';
-            draggableElement.style.height = draggableElement.offsetHeight + 1 + 'px';
+
+            const proporcaoAtual = draggableElement.offsetWidth / draggableElement.offsetHeight;
+
+            const aumento = size;
+            draggableElement.style.width = (draggableElement.offsetWidth + aumento) + 'px';
+            draggableElement.style.height = (draggableElement.offsetHeight + aumento / proporcaoAtual) + 'px';
 
         }
 
@@ -489,17 +532,21 @@
         }, false);
 
         button.addEventListener("click", function (e) {
-            zoom()
+            zoom(15)
         }, false);
 
 
         function reduce() {
-            ajustarOpacidade(0.8)
+            ajustarOpacidade(0.8);
+
             const draggableElement = document.getElementById('draggable');
             const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
-            draggableElement.style.width = draggableElement.offsetWidth - 1 + 'px';
-            draggableElement.style.height = draggableElement.offsetHeight - 1 + 'px';
+            const proporcaoAtual = draggableElement.offsetWidth / draggableElement.offsetHeight;
+            const reducao = 15;
+            draggableElement.style.width = (draggableElement.offsetWidth - reducao) + 'px';
+            draggableElement.style.height = (draggableElement.offsetHeight - reducao / proporcaoAtual) + 'px';
         }
+
 
         var button = document.querySelector("#reduce");
         var reduceInterval;
@@ -533,6 +580,7 @@
             }
 
 
+
             const imagem = document.getElementById('draggable');
             const modelofimage = document.getElementById('modelofimage');
 
@@ -544,7 +592,11 @@
             const novoAngulo = anguloAtual + degrees;
             imagem.style.transform = `rotate(${novoAngulo}deg)`;
             modelofimage.style.transform = `rotate(${novoAngulo}deg)`;
+            
+            //zoom(1)
 
+            console.log(document.getElementById('draggable').offsetTop)
+        
             setTimeout(function () {
                 ajustarOpacidade(1)
             }, 500);
