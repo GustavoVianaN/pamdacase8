@@ -68,7 +68,7 @@
                         onmousedown="iniciarMovimentoDown()" onmouseup="pararMovimentoDown()" />
                     <path d="M8,50 25,70 25,30Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoLeft()"
                         onmousedown="iniciarMovimentoLeft()" onmouseup="pararMovimentoLeft()" />
-                    <path d="M95,50 75,70 75,30Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoRight()"
+                    <path id="rightButton" d="M95,50 75,70 75,30Z" fill="rgba(0,0,0,0.8)" onclick="MovimentoRight()"
                         onmousedown="iniciarMovimentoRight()" onmouseup="pararMovimentoRight()" />
                 </svg>
 
@@ -139,14 +139,68 @@
     <script>
 
 
+        function detectMouseDirection() {
+            let startX, startY;
 
-        function maxposition() {
-            return true
+            document.addEventListener('mousedown', (event) => {
+                startX = event.clientX;
+                startY = event.clientY;
+
+                document.addEventListener('mousemove', onMouseMove);
+            });
+
+            document.addEventListener('mouseup', () => {
+                document.removeEventListener('mousemove', onMouseMove);
+            });
+
+            function onMouseMove(event) {
+                const endX = event.clientX;
+                const endY = event.clientY;
+
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+
+                let direction = '';
+
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+
+                        var draggable = document.getElementById('draggable');
+                        var offsetLeft = draggable.offsetLeft;
+                        if (offsetLeft > 250) {
+                            moverImagem(0, -5); 
+                            intervaloUp = setInterval(createAElement, 3000);
+
+                                   
+                        }
+
+                    } else {
+                        direction = 'Esquerda';
+                    }
+                } else { // Caso contrário, o movimento vertical é mais significativo
+                    if (deltaY > 0) {
+                        direction = 'Baixo';
+                    } else {
+                        direction = 'Cima';
+                    }
+                }
+                processDirection(direction);
+
+                startX = endX;
+                startY = endY;
+            }
         }
+
+        function processDirection(direction) {
+            console.log(direction);
+        }
+        detectMouseDirection();
+
 
         var minhaVariavelGlobal = [];
 
         function handleMouseUp(event) {
+
             var modelofimage = document.getElementById('modelofimage');
             var draggable = document.getElementById('draggable');
             setTimeout(function () {
@@ -164,7 +218,7 @@
 
         lastpositionX = ''
         document.getElementById("joystick").addEventListener("mouseup", handleMouseUp);
-        
+
         function createDraggable(elemento) {
             let posX = 0;
             let posY = 0;
@@ -186,20 +240,11 @@
                 var diffX = event.x - posX;
                 var diffY = event.y - posY;
 
-
-            /*   console.log(document.getElementById('draggable').offsetWidth - document.getElementById('draggable').offsetLeft)
-                if(document.getElementById('draggable').offsetLeft > 230){
-                    var diffX = 0
-                    left =  0
-                    window.addEventListener("mouseup", onMouseUp);
-                    onMouseDown(event)
-                } 
-                */
                 if (minhaVariavelGlobal[2]) {
                     top = parseFloat(minhaVariavelGlobal[1]);
                     left = parseFloat(minhaVariavelGlobal[0]);
                 } else {
-                    
+
                     elemento.style.top = `${top + diffY}px`;
                     elemento.style.left = `${left + diffX}px`;
 
@@ -249,8 +294,6 @@
 
             createDraggable(imgDraggable);
         }
-
-
 
 
 
@@ -317,14 +360,14 @@
 
             var larguraString = document.getElementById('modelofimage').style.height;
             if (larguraString.includes('%')) {
-                moverImagem(0, -10);
+                moverImagem(0, -5);
                 ajustarOpacidade(0.8);
             } else {
-                moverImagem(0, -10);
+                moverImagem(0, -5);
                 ajustarOpacidade(0.8);
                 larguraString = parseInt(larguraString);
                 if (larguraString + offsetTop < 430) {
-                    moverImagem(0, 10);
+                    moverImagem(0, 5);
                     ajustarOpacidade(0.8);
                 }
             }
@@ -333,7 +376,7 @@
         function MovimentoDown() {
             if (document.getElementById('modelofimage').offsetTop < 10 && document.getElementById('draggable').offsetTop < 10) {
 
-                moverImagem(0, 10);
+                moverImagem(0, 5);
                 ajustarOpacidade(0.8);
             }
         }
@@ -349,12 +392,12 @@
             var larguraString = document.getElementById('modelofimage').style.width;
 
             if (larguraString.includes('%')) {
-                moverImagem(-10, 0);
+                moverImagem(-5, 0);
                 ajustarOpacidade(0.8);
             } else {
                 larguraString = parseInt(larguraString);
                 if (larguraString + offsetLeft > 430) {
-                    moverImagem(-10, 0);
+                    moverImagem(-5, 0);
                     ajustarOpacidade(0.8);
                 }
             }
@@ -363,7 +406,7 @@
 
         function MovimentoRight() {
             if (document.getElementById('modelofimage').offsetLeft < 229 && document.getElementById('draggable').offsetLeft < 229) {
-                moverImagem(10, 0);
+                moverImagem(5, 0);
                 ajustarOpacidade(0.8);
             }
         }
@@ -481,7 +524,6 @@
                             }
                         }
 
-
                         var draggable = document.getElementById('draggable');
 
                         draggable.style.backgroundImage = 'url(' + e.target.result + ')';
@@ -492,13 +534,37 @@
                         draggable.style.marginLeft = modelofimage.style.marginLeft
                         modelofimage.style.display = 'none';
 
+                        newparam = centralizarimagemaposupdate(modelofimage.style.marginLeft, draggable.style.marginLeft)
+
+                        modelofimage.style.marginLeft = `${newparam}%`
+                        draggable.style.marginLeft = `${newparam}%`
+
+                        validatorwidthnun(modelofimage, draggable)
                     };
                 };
 
-
                 reader.readAsDataURL(inputImagem.files[0]);
             }
+        }
 
+        function validatorwidthnun(modelofimage, draggable) {
+            console.log(draggable.style.width)
+
+
+            if (parseFloat(modelofimage.style.left.replace('%', '')) == 0 && parseFloat(draggable.style.width.replace('%', '')) >= 45 && parseFloat(draggable.style.width.replace('%', '')) < 50) {
+                modelofimage.style.left = `5px`
+                draggable.style.left = '5px'
+            }
+
+            if (parseFloat(modelofimage.style.left.replace('%', '')) == 0 && parseFloat(draggable.style.width.replace('%', '')) >= 70 && parseFloat(draggable.style.width.replace('%', '')) < 75) {
+                modelofimage.style.left = `100px`
+                draggable.style.left = '100px'
+            }
+
+            if (parseFloat(modelofimage.style.left.replace('%', '')) == 0 && parseFloat(draggable.style.width.replace('%', '')) >= 90 && parseFloat(draggable.style.width.replace('%', '')) < 95) {
+                modelofimage.style.left = `30px`
+                draggable.style.left = '30px'
+            }
 
         }
 
@@ -532,19 +598,24 @@
         }, false);
 
         button.addEventListener("click", function (e) {
-            zoom(15)
+            zoom(10)
         }, false);
 
 
         function reduce() {
-            ajustarOpacidade(0.8);
+
 
             const draggableElement = document.getElementById('draggable');
-            const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
-            const proporcaoAtual = draggableElement.offsetWidth / draggableElement.offsetHeight;
-            const reducao = 15;
-            draggableElement.style.width = (draggableElement.offsetWidth - reducao) + 'px';
-            draggableElement.style.height = (draggableElement.offsetHeight - reducao / proporcaoAtual) + 'px';
+            ajustarOpacidade(0.8);
+            console.log(draggableElement.style.height)
+            if (parseInt(parseFloat(draggableElement.style.height.replace('px', ''))) > 435) {
+                const corFundo = window.getComputedStyle(draggableElement).backgroundColor;
+                const proporcaoAtual = draggableElement.offsetWidth / draggableElement.offsetHeight;
+                const reducao = 10;
+                draggableElement.style.width = (draggableElement.offsetWidth - reducao) + 'px';
+                draggableElement.style.height = (draggableElement.offsetHeight - reducao / proporcaoAtual) + 'px';
+            }
+
         }
 
 
@@ -592,11 +663,10 @@
             const novoAngulo = anguloAtual + degrees;
             imagem.style.transform = `rotate(${novoAngulo}deg)`;
             modelofimage.style.transform = `rotate(${novoAngulo}deg)`;
-            
+
             //zoom(1)
 
-            console.log(document.getElementById('draggable').offsetTop)
-        
+
             setTimeout(function () {
                 ajustarOpacidade(1)
             }, 500);
@@ -637,6 +707,58 @@
                 ajustarOpacidade(1)
             }, 500);
         });
+
+
+        function centralizarimagemaposupdate(paramOne, paramTwo) {
+            let paramOneNumber = parseFloat(paramOne.replace('%', ''));
+            let paramTwoNumber = parseFloat(paramTwo.replace('%', ''));
+            console.log(paramOneNumber, paramTwoNumber)
+
+            if (paramOneNumber >= 0 && paramOneNumber <= 5 && paramTwoNumber >= 0 && paramTwoNumber <= 5) {
+                // Código para 0% a 5%
+            } else if (paramOneNumber > 5 && paramOneNumber <= 10 && paramTwoNumber > 5 && paramTwoNumber <= 10) {
+                // Código para 5% a 10%
+            } else if (paramOneNumber > 10 && paramOneNumber <= 15 && paramTwoNumber > 10 && paramTwoNumber <= 15) {
+                // Código para 10% a 15%
+            } else if (paramOneNumber > 15 && paramOneNumber <= 20 && paramTwoNumber > 15 && paramTwoNumber <= 20) {
+                // Código para 15% a 20%
+            } else if (paramOneNumber > 20 && paramOneNumber <= 25 && paramTwoNumber > 20 && paramTwoNumber <= 25) {
+                return 28.5
+            } else if (paramOneNumber > 25 && paramOneNumber <= 30 && paramTwoNumber > 25 && paramTwoNumber <= 30) {
+                return 25
+            } else if (paramOneNumber > 30 && paramOneNumber <= 35 && paramTwoNumber > 30 && paramTwoNumber <= 35) {
+                // Código para 30% a 35%
+            } else if (paramOneNumber > 35 && paramOneNumber <= 40 && paramTwoNumber > 35 && paramTwoNumber <= 40) {
+                return 33
+            } else if (paramOneNumber > 40 && paramOneNumber <= 45 && paramTwoNumber > 40 && paramTwoNumber <= 45) {
+                // Código para 40% a 45%
+            } else if (paramOneNumber > 45 && paramOneNumber <= 50 && paramTwoNumber > 45 && paramTwoNumber <= 50) {
+                // Código para 45% a 50%
+            } else if (paramOneNumber > 50 && paramOneNumber <= 55 && paramTwoNumber > 50 && paramTwoNumber <= 55) {
+                // Código para 50% a 55%
+            } else if (paramOneNumber > 55 && paramOneNumber <= 60 && paramTwoNumber > 55 && paramTwoNumber <= 60) {
+                // Código para 55% a 60%
+            } else if (paramOneNumber > 60 && paramOneNumber <= 65 && paramTwoNumber > 60 && paramTwoNumber <= 65) {
+                // Código para 60% a 65%
+            } else if (paramOneNumber > 65 && paramOneNumber <= 70 && paramTwoNumber > 65 && paramTwoNumber <= 70) {
+                // Código para 65% a 70%
+            } else if (paramOneNumber > 70 && paramOneNumber <= 75 && paramTwoNumber > 70 && paramTwoNumber <= 75) {
+                // Código para 70% a 75%
+            } else if (paramOneNumber > 75 && paramOneNumber <= 80 && paramTwoNumber > 75 && paramTwoNumber <= 80) {
+                // Código para 75% a 80%
+            } else if (paramOneNumber > 80 && paramOneNumber <= 85 && paramTwoNumber > 80 && paramTwoNumber <= 85) {
+                // Código para 80% a 85%
+            } else if (paramOneNumber > 85 && paramOneNumber <= 90 && paramTwoNumber > 85 && paramTwoNumber <= 90) {
+                // Código para 85% a 90%
+            } else if (paramOneNumber > 90 && paramOneNumber <= 95 && paramTwoNumber > 90 && paramTwoNumber <= 95) {
+                // Código para 90% a 95%
+            } else if (paramOneNumber > 95 && paramOneNumber <= 100 && paramTwoNumber > 95 && paramTwoNumber <= 100) {
+                // Código para 95% a 100%
+            }
+
+        }
+
+
     </script>
 
 
